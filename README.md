@@ -1,5 +1,8 @@
 # Trillo.js
 
+[![CodeQL](https://github.com/fcapolini/trillo/actions/workflows/codeql.yml/badge.svg)](https://github.com/fcapolini/trillo/actions/workflows/codeql.yml)
+[![Node.js CI](https://github.com/fcapolini/trillo/actions/workflows/node.js.yml/badge.svg)](https://github.com/fcapolini/trillo/actions/workflows/node.js.yml)
+
 **Reactive Isomorphic HTML**
 
 ```html
