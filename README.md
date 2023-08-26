@@ -3,11 +3,11 @@
 [![CodeQL](https://github.com/fcapolini/trillo/actions/workflows/codeql.yml/badge.svg)](https://github.com/fcapolini/trillo/actions/workflows/codeql.yml)
 [![Node.js CI](https://github.com/fcapolini/trillo/actions/workflows/node.js.yml/badge.svg)](https://github.com/fcapolini/trillo/actions/workflows/node.js.yml)
 
-**Reactive Isomorphic HTML**
+**Reactive [Isomorphic](https://en.wikipedia.org/wiki/Isomorphic_JavaScript) HTML**
 
 ```html
 <html>
-  <body :count=[[0]] :did-init=[[setInterval(() => count++, 1000)]]>
+  <body :count=[[0]] did:init=[[setInterval(() => count++, 1000)]]>
     Count: [[count]]
   </body>
 </html>
