@@ -191,3 +191,11 @@ npm install -D browserify tsify
     "build-client": "browserify src/client.ts -p tsify > dist/client.js",
     "build-server": "tsc"
 ```
+
+### GitHub badges
+
+- [ ] see [ci-badges-action](https://github.com/GaelGirodon/ci-badges-action)
+
+### NPM publishing
+
+- [ ] add "Publish Node.js Package" workflow [here](https://github.com/fcapolini/trillo/actions/new)
