@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run build-client && mocha --reporter mocha-junit-reporter --exit -r ts-node/register test/**/*.test.ts",
-    "coverage": "nyc npm run test",
+    "coverage": "nyc --reporter=cobertura npm run test",
     "build": "npm run build-server && npm run build-client",
     "build-client": "browserify src/client.ts -p tsify > dist/client.js",
     "build-server": "tsc"

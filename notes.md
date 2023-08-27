@@ -201,6 +201,8 @@ npm install -D browserify tsify
   - trillo repository
     - added env.GIST_ID
     - added secrets.GIST_TOKEN
+  - README.md
+    - ![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2Ffcapolini%2Fee36283cfd3eb89ecdd1e5d23910682f%2Fraw%2Fci-badges-action-junit-tests.json)
 
 ### NPM publishing
 
