@@ -195,6 +195,12 @@ npm install -D browserify tsify
 ### GitHub badges
 
 - [ ] see [ci-badges-action](https://github.com/GaelGirodon/ci-badges-action)
+  - gist
+    - added [gist](https://gist.github.com/fcapolini/ee36283cfd3eb89ecdd1e5d23910682f)
+    - created personal access token trillo-ci-badges-action
+  - trillo repository
+    - added env.GIST_ID
+    - added secrets.GIST_TOKEN
 
 ### NPM publishing
 
