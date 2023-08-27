@@ -4,6 +4,7 @@
 [![Node.js CI](https://github.com/fcapolini/trillo/actions/workflows/node.js.yml/badge.svg)](https://github.com/fcapolini/trillo/actions/workflows/node.js.yml)
 
 ![tests](https://img.shields.io/endpoint?style=flat-square&url=https://gist.githubusercontent.com/fcapolini/ee36283cfd3eb89ecdd1e5d23910682f/raw/trillo-junit-tests.json)
+![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2Ffcapolini%2Fee36283cfd3eb89ecdd1e5d23910682f%2Fraw%2Ftrillo-cobertura-coverage.json)
 
 **Reactive [Isomorphic](https://en.wikipedia.org/wiki/Isomorphic_JavaScript) HTML**
 
