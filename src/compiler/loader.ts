@@ -565,7 +565,7 @@ export class PreprocessorError {
   ) {
     this.msg = msg;
     this.fname = (rootPath && fname && fname.startsWith(rootPath)
-      ? fname.substr(rootPath.length + (rootPath.endsWith('/') ? 0 : 1))
+      ? fname.substring(rootPath.length + (rootPath.endsWith('/') ? 0 : 1))
       : fname);
     this.pos = (pos ? pos : 0);
     this.row = row;
