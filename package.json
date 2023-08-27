@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run build-client && mocha --exit -r ts-node/register test/**/*.test.ts",
+    "test": "npm run build-client && mocha --reporter mocha-junit-reporter --exit -r ts-node/register test/**/*.test.ts",
     "coverage": "nyc npm run test",
     "build": "npm run build-server && npm run build-client",
     "build-client": "browserify src/client.ts -p tsify > dist/client.js",
@@ -24,6 +24,7 @@
     "browserify": "^17.0.0",
     "chai": "^4.3.8",
     "mocha": "^10.2.0",
+    "mocha-junit-reporter": "^2.2.1",
     "nyc": "^15.1.0",
     "ts-node": "^10.9.1",
     "tsify": "^5.0.4",
