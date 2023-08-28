@@ -1,5 +1,32 @@
 /* istanbul ignore file */
 
+export class TreeNode {
+  parent: TreeNode | null;
+  children: TreeNode[];
+
+  constructor(parent: TreeNode | null, index = -1) {
+    this.parent = null;
+    this.children = [];
+    parent && this.link(parent, index);
+  }
+
+  link(parent: TreeNode, index = -1) {
+    this.unlink();
+    this.parent = parent;
+    const a = parent.children;
+    a.splice(index < 0 ? a.length : index, 0, this);
+  }
+
+  unlink() {
+    if (this.parent) {
+      const a = this.parent.children;
+      const i = a.indexOf(this);
+      i >= 0 && a.splice(i, 1);
+      this.parent = null;
+    }
+  }
+}
+
 export class StringBuf {
   parts: string[];
 
