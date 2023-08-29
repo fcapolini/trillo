@@ -4,34 +4,23 @@
 // =============================================================================
 
 export interface ContextProps {
-  cycle?: number;
+  cycle: number;
+  root: ScopeProps;
 }
 
 export class Context {
   props: ContextProps;
   scopes: Map<ScopeId, Scope>;
-  root?: Scope;
-  refreshLevel: number;
-  pushLevel: number;
+  root: Scope;
 
   constructor(props: ContextProps) {
     this.props = props;
     this.scopes = new Map();
-    this.refreshLevel = this.pushLevel = 0;
+    this.root = this.makeRoot(props.root);
   }
 
-  refresh(scope: Scope, noincrement = false, noupdate = false) {
-    this.refreshLevel++;
-    try {
-      this.props.cycle
-        ? (noincrement ? null : this.props.cycle++)
-        : this.props.cycle = 1;
-      scope.unlinkValues();
-      scope.linkValues();
-      noupdate ? null : scope.updateValues();
-    } catch (ignored: any) {}
-    this.refreshLevel--;
-    return this;
+  protected makeRoot(props: ScopeProps) {
+    return new Scope(this, null, props);
   }
 }
 
@@ -47,6 +36,7 @@ export interface ScopeProps {
   id: ScopeId;
   name?: string;
   values?: { [key: string]: ValueProps };
+  children?: ScopeProps[];
 }
 
 export class Scope extends TreeNode {
@@ -55,20 +45,22 @@ export class Scope extends TreeNode {
   cloneOf?: Scope;
   values?: { [key: string]: Value };
 
-  constructor(context: Context, props: ScopeProps, cloneOf?: Scope) {
-    super(null);
+  constructor(
+    context: Context,
+    parent: Scope | null,
+    props: ScopeProps,
+    index = -1,
+    cloneOf?: Scope
+  ) {
+    super(parent, index);
     this.context = context;
     this.props = props;
     this.cloneOf = cloneOf;
+    context.scopes.set(props.id, this);
   }
 
-  linkValues() {
-  }
-
-  unlinkValues() {
-  }
-
-  updateValues() {
+  dispose() {
+    this.context.scopes.delete(this.props.id);
   }
 }
 

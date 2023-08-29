@@ -8,7 +8,7 @@
     "coverage": "npm run build-client && nyc --reporter=cobertura npm run coverage-test",
     "coverage-test": "mocha --reporter mocha-junit-reporter --exit -r ts-node/register test/**/*.test.ts",
     "build": "npm run build-server && npm run build-client",
-    "build-client": "browserify src/client.ts -p tsify > dist/client.js",
+    "build-client": "mkdir -p dist && browserify src/client.ts -p tsify > dist/client.js",
     "build-server": "tsc"
   },
   "keywords": [],
