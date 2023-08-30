@@ -1,4 +1,4 @@
-import { TreeNode } from "../lib/util";
+import { PubSub, TreeNode } from "../lib/util";
 
 const OUTER_PROPERTY = 'outer';
 const RESERVED_PREFIX = '__';
@@ -37,9 +37,7 @@ export type ScopeId = string;
 export interface ScopeProps {
   id: ScopeId;
   name?: string;
-  proxyHandler: ScopeProxyHandler;
   values?: { [key: string]: ValueProps };
-  proxy: any;
   children?: ScopeProps[];
 }
 
@@ -146,13 +144,17 @@ export interface ValueProps {
   val: any;
 }
 
-export class Value {
+export class Value extends PubSub<Value> {
   scope: Scope;
   props: ValueProps;
-  cb?: (v: any) => void;
 
   constructor(scope: Scope, props: ValueProps) {
+    super();
     this.scope = scope;
     this.props = props;
+  }
+
+  override onPub(v: Value) {
+
   }
 }

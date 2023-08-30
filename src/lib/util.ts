@@ -27,6 +27,42 @@ export class TreeNode {
   }
 }
 
+export abstract class PubSub<T> {
+  pubs: Set<PubSub<T>>;
+  subs: Set<PubSub<T>>;
+
+  constructor() {
+    this.pubs = new Set();
+    this.subs = new Set();
+  }
+
+  addPub(d: PubSub<T>) {
+    this.pubs.add(d);
+    d.subs.add(this);
+  }
+
+  removePub(d: PubSub<T>) {
+    this.pubs.delete(d);
+    d.subs.delete(this);
+  }
+
+  clearPubs() {
+    this.pubs.forEach(d => {
+      this.removePub(d);
+    });
+  }
+
+  notifySubs(v: T) {
+    this.subs.forEach(d => {
+      try {
+        d.onPub(v);
+      } catch (ignored: any) {}
+    });
+  }
+
+  abstract onPub(v: T): void;
+}
+
 export class StringBuf {
   parts: string[];
 
