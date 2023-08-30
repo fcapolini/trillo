@@ -15,7 +15,7 @@ describe('runtime: core', () => {
     assert.equal(context.scopes.get('0')?.props.name, 'root');
   })
 
-  it.skip('should create a scope', () => {
+  it('should create a scope', () => {
     const context = new Context({
       cycle: 0,
       root: {
