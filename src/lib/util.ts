@@ -1,25 +1,25 @@
 /* istanbul ignore file */
 
-export class TreeNode {
-  parent: TreeNode | null;
-  children: TreeNode[];
+export class Tree<T> {
+  parent: T | null;
+  children: T[];
 
-  constructor(parent: TreeNode | null, index = -1) {
+  constructor(parent: T | null, index = -1) {
     this.parent = null;
     this.children = [];
     parent && this.link(parent, index);
   }
 
-  link(parent: TreeNode, index = -1) {
+  link(parent: T, index = -1) {
     this.unlink();
     this.parent = parent;
-    const a = parent.children;
-    a.splice(index < 0 ? a.length : index, 0, this);
+    const a = (parent as Tree<T>).children;
+    a.splice(index < 0 ? a.length : index, 0, this as any);
   }
 
   unlink() {
     if (this.parent) {
-      const a = this.parent.children;
+      const a = (this.parent as any).children;
       const i = a.indexOf(this);
       i >= 0 && a.splice(i, 1);
       this.parent = null;
@@ -36,31 +36,31 @@ export abstract class PubSub<T> {
     this.subs = new Set();
   }
 
-  addPub(d: PubSub<T>) {
-    this.pubs.add(d);
-    d.subs.add(this);
+  addSub(sub: PubSub<T>) {
+    this.subs.add(sub);
+    sub.pubs.add(this);
   }
 
-  removePub(d: PubSub<T>) {
-    this.pubs.delete(d);
-    d.subs.delete(this);
+  delSub(sub: PubSub<T>) {
+    this.subs.delete(sub);
+    sub.pubs.delete(this);
   }
 
-  clearPubs() {
-    this.pubs.forEach(d => {
-      this.removePub(d);
+  unlink() {
+    this.pubs.forEach(pub => {
+      pub.delSub(this);
     });
   }
 
-  notifySubs(v: T) {
-    this.subs.forEach(d => {
+  updateSubs() {
+    this.subs.forEach(sub => {
       try {
-        d.onPub(v);
+        sub.pubUpdate(this);
       } catch (ignored: any) {}
     });
   }
 
-  abstract onPub(v: T): void;
+  abstract pubUpdate(pub: PubSub<T>): void;
 }
 
 export class StringBuf {
