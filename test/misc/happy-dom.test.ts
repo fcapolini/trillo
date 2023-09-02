@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { Window } from 'happy-dom';
 
-describe('happy-dom', function () {
+describe('misc: happy-dom', function () {
 
   it("should execute example", () => {
     const window = new Window();
