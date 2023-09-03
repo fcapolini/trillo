@@ -11,14 +11,26 @@ export class ScopeProxyHandler implements ProxyHandler<any> {
     return value ? this.update(value) : undefined;
   }
 
+  set(target: any, prop: string, val: any, receiver?: any): boolean {
+    const value = this.scope.lookupValue(prop);
+    if (value) {
+      const old = value.value;
+      value.value = val;
+      delete value.fn;
+      if (old == null ? value.value != null : old !== value.value) {
+        value.cb && value.cb(value);
+        this.propagate(value);
+      }
+      return true;
+    }
+    return false;
+  }
+
   eval(value: Value) {
     try {
       value.value = value.fn?.apply((value.scope as Scope).proxy);
     } catch (ex: any) {
-      //TODO: filter errors due to `data` being null/undefined
-      //TODO: should we assume null / empty string as result?
-      //TODO: (+ use v.ValueProps.pos if available)
-      console.log(ex);
+      //TODO: log error
     }
   }
 
