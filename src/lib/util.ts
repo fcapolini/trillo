@@ -27,46 +27,6 @@ export class Tree<T> {
   }
 }
 
-export abstract class PubSub<T> {
-  pubs: Set<PubSub<T>>;
-  subs: Set<PubSub<T>>;
-
-  constructor() {
-    this.pubs = new Set();
-    this.subs = new Set();
-  }
-
-  hasSubs(): boolean {
-    return this.subs.size > 0;
-  }
-
-  addSub(sub: PubSub<T>) {
-    this.subs.add(sub);
-    sub.pubs.add(this);
-  }
-
-  delSub(sub: PubSub<T>) {
-    this.subs.delete(sub);
-    sub.pubs.delete(this);
-  }
-
-  unlink() {
-    this.pubs.forEach(pub => {
-      pub.delSub(this);
-    });
-  }
-
-  updateSubs() {
-    this.subs.forEach(sub => {
-      try {
-        sub.pubUpdate(this);
-      } catch (ignored: any) {}
-    });
-  }
-
-  abstract pubUpdate(pub: PubSub<T>): void;
-}
-
 export class StringBuf {
   parts: string[];
 

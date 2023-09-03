@@ -18,7 +18,7 @@ export class ScopeProxyHandler implements ProxyHandler<any> {
       this.eval(v);
       if (old == null ? v.value != null : old !== v.value) {
         v.cb && v.cb(v);
-        v.hasSubs() && this.context.refreshLevel < 1 && this.propagate(v);
+        v.dst && this.context.refreshLevel < 1 && this.propagate(v);
       }
     }
     return v.value;
@@ -42,7 +42,7 @@ export class ScopeProxyHandler implements ProxyHandler<any> {
     this.context.pushLevel++;
     try {
       const that = this;
-      value.subs.forEach(function(v) {
+      value.dst?.forEach(function(v) {
         that.update(v as Value);
       });
     } catch (ignored: any) {}

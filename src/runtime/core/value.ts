@@ -1,4 +1,3 @@
-import { PubSub } from "../../lib/util";
 import { Scope } from "./scope";
 
 export interface ValueProps {
@@ -6,20 +5,23 @@ export interface ValueProps {
   refs?: string[];
 }
 
-export class Value extends PubSub<Value> {
+export class Value {
   scope: Scope;
   props: ValueProps;
   cb?: (v: Value) => void;
   cycle: number;
+  src: Set<Value>;
+  dst: Set<Value>;
   fn?: () => any;
   value: any;
 
   constructor(scope: Scope, props: ValueProps, cb?: (v: Value) => void) {
-    super();
     this.scope = scope;
     this.props = props;
     this.cb = cb;
     this.cycle = 0;
+    this.src = new Set();
+    this.dst = new Set();
     this.fn = props.fn;
   }
 
@@ -27,14 +29,18 @@ export class Value extends PubSub<Value> {
     let that: Value | undefined;
     this.props.refs?.forEach(key => {
       if ((that = this.scope.lookupValue(key)) !== undefined) {
-        that.addSub(this);
+        that.dst.add(this);
+        this.src.add(that);
       } else {
-
+        //TODO link error
       }
     });
   }
 
-  pubUpdate(pub: Value) {
-
+  unlink() {
+    this.src.forEach(v => {
+      v.dst.delete(this);
+    });
+    this.src.clear();
   }
 }
