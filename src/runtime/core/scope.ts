@@ -33,11 +33,6 @@ export class Scope extends Tree<Scope> {
     return ret;
   }
 
-  // delValue(key: string, val: Value) {
-  //   this.values.delete(key);
-  //   val.unlink();
-  // }
-
   linkValues() {
     this.values.forEach((v: Value) => {
       v.link();
