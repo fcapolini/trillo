@@ -12,17 +12,13 @@ export class Context {
 
   constructor(props: ContextProps, cb: (global: Scope) => void) {
     this.props = props;
-    this.global = this.makeGlobalScope();
+    this.global = new Scope(this, null, { isRoot: true });
     this.cycle = 0;
     this.refreshLevel = 0;
     this.pushLevel = 0;
     cb(this.global);
     this.init();
     this.refresh();
-  }
-
-  init() {
-    this.global.linkValues();
   }
 
   refresh(scope?: Scope, noincrement?: boolean, noupdate?: boolean) {
@@ -37,9 +33,5 @@ export class Context {
     this.refreshLevel--;
   }
 
-  protected makeGlobalScope(): Scope {
-    return new Scope(this, null, {
-      isRoot: true,
-    });
-  }
+  protected init() {}
 }
