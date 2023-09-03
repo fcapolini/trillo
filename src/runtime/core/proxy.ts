@@ -11,6 +11,22 @@ export class ScopeProxyHandler implements ProxyHandler<any> {
     return value ? this.update(value) : undefined;
   }
 
+  eval(value: Value) {
+    try {
+      value.value = value.fn?.apply((value.scope as Scope).proxy);
+    } catch (ex: any) {
+      //TODO: filter errors due to `data` being null/undefined
+      //TODO: should we assume null / empty string as result?
+      //TODO: (+ use v.ValueProps.pos if available)
+      console.log(ex);
+    }
+  }
+
+  trigger(value: Value) {
+    value.cb && value.cb(value);
+    this.propagate(value);
+  }
+
   private update(v: Value) {
     if (v.fn && v.cycle < this.context.cycle) {
       v.cycle = this.context.cycle;
@@ -22,17 +38,6 @@ export class ScopeProxyHandler implements ProxyHandler<any> {
       }
     }
     return v.value;
-  }
-
-  private eval(value: Value) {
-    try {
-      value.value = value.fn?.apply((value.scope as Scope).proxy);
-    } catch (ex: any) {
-      //TODO: filter errors due to `data` being null/undefined
-      //TODO: should we assume null / empty string as result?
-      //TODO: (+ use v.ValueProps.pos if available)
-      console.log(ex);
-    }
   }
 
   private propagate(value: Value) {

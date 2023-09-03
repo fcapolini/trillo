@@ -27,6 +27,16 @@ export class Scope extends Tree<Scope> {
     return this.proxy[key];
   }
 
+  eval(key: string) {
+    const value = this.values.get(key);
+    value && this.proxyHandler.eval(value);
+  }
+
+  trigger(key: string) {
+    const value = this.values.get(key);
+    value && this.proxyHandler.trigger(value);
+  }
+
   addValue(key: string, props: ValueProps): Value {
     const ret = new Value(this, props);
     this.values.set(key, ret);
