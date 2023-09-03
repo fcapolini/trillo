@@ -36,6 +36,10 @@ export abstract class PubSub<T> {
     this.subs = new Set();
   }
 
+  hasSubs(): boolean {
+    return this.subs.size > 0;
+  }
+
   addSub(sub: PubSub<T>) {
     this.subs.add(sub);
     sub.pubs.add(this);
