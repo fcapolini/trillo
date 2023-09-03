@@ -4,7 +4,7 @@ import { Value } from "./value";
 
 export class ScopeProxyHandler implements ProxyHandler<any> {
 
-  constructor(protected context: Context, protected scope: Scope) {}
+  constructor(protected context: Context<any>, protected scope: Scope) {}
 
   get(target: any, key: string, receiver: any): any {
     const value = this.scope.lookupValue(key);

@@ -7,7 +7,7 @@ describe('runtime: core', () => {
     let cbCalls = 0;
     let cbValue = undefined;
 
-    const app = new core.Context({ cycle: 0 }, global => {
+    const app = new core.Context({}, global => {
       global.addValue('x', { fn: function() {
         return 10;
       } }, (v) => {
@@ -30,7 +30,7 @@ describe('runtime: core', () => {
     let cbCalls = 0;
     let cbValue = undefined;
 
-    const app = new core.Context({ cycle: 0 }, global => {
+    const app = new core.Context({}, global => {
       global.addValue('x', { fn: function() {
         return 10;
       } });
@@ -56,7 +56,7 @@ describe('runtime: core', () => {
     let cbCalls = 0;
     let cbValue = undefined;
 
-    const app = new core.Context({ cycle: 0 }, global => {
+    const app = new core.Context({}, global => {
       global.addValue('x', { fn: function() {
         return this.y + 1;
       }, refs: ['y'] });
@@ -82,7 +82,7 @@ describe('runtime: core', () => {
     const cbCalls = [0, 0];
     const cbValue = [undefined, undefined];
 
-    const app = new core.Context({ cycle: 0 }, global => {
+    const app = new core.Context({}, global => {
       global.addValue('x', { fn: function() {
         return 10;
       } });
@@ -121,7 +121,7 @@ describe('runtime: core', () => {
     const cbCalls = [0, 0];
     const cbValue = [undefined, undefined];
 
-    const app = new core.Context({ cycle: 0 }, global => {
+    const app = new core.Context({}, global => {
       global.addValue('x', { fn: function() {
         return 10;
       } });

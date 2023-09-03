@@ -3,21 +3,21 @@ import { Scope } from "./scope";
 export interface ContextProps {
 }
 
-export class Context {
-  props: ContextProps;
+export class Context<T> {
+  props: T;
   global: Scope;
   cycle: number;
   refreshLevel: number;
   pushLevel: number;
 
-  constructor(props: ContextProps, cb: (global: Scope) => void) {
+  constructor(props: T, cb: (global: Scope) => void) {
     this.props = props;
     this.global = new Scope(this, null, { isRoot: true });
     this.cycle = 0;
     this.refreshLevel = 0;
     this.pushLevel = 0;
-    cb(this.global);
     this.init();
+    cb(this.global);
     this.refresh();
   }
 

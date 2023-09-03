@@ -1,5 +1,5 @@
-import { Context } from "./core/context";
-import { Scope } from "./core/scope";
-import { Value } from "./core/value";
+import { Context, ContextProps } from "./core/context";
+import { Scope, ScopeProps } from "./core/scope";
+import { Value, ValueProps } from "./core/value";
 
-export { Context, Scope, Value };
+export { Context, ContextProps, Scope, ScopeProps, Value, ValueProps };

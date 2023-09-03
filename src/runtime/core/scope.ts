@@ -8,13 +8,13 @@ export interface ScopeProps {
 }
 
 export class Scope extends Tree<Scope> {
-  context: Context;
+  context: Context<any>;
   props: ScopeProps;
   proxyHandler: ScopeProxyHandler;
   values: Map<string, Value>;
   proxy: any;
 
-  constructor(context: Context, parent: Scope | null, props: ScopeProps) {
+  constructor(context: Context<any>, parent: Scope | null, props: ScopeProps) {
     super(parent);
     this.context = context;
     this.props = props;
