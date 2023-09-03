@@ -8,28 +8,23 @@ export class ScopeProxyHandler implements ProxyHandler<any> {
 
   get(target: any, key: string, receiver: any): any {
     const value = this.scope.lookupValue(key);
-    value && this.update(value);
-    return value?.value;
+    return value ? this.update(value) : undefined;
   }
 
-  update(v: Value) {
-    if (v.fn) {
-      if (!v.cycle || v.cycle < (this.context.cycle)) {
-        v.cycle = this.context.cycle;
-        const old = v.value;
-        this.eval(v);
-        if (old == null ? v.value != null : old !== v.value) {
-          v.cb && v.cb(v);
-          v.hasSubs() && this.context.refreshLevel < 1 && this.propagate(v);
-        }
-      }
-    } else if (v.cycle == null) {
+  private update(v: Value) {
+    if (v.fn && v.cycle < this.context.cycle) {
       v.cycle = this.context.cycle;
-      v.cb && v.cb(v);
+      const old = v.value;
+      this.eval(v);
+      if (old == null ? v.value != null : old !== v.value) {
+        v.cb && v.cb(v);
+        v.hasSubs() && this.context.refreshLevel < 1 && this.propagate(v);
+      }
     }
+    return v.value;
   }
 
-  eval(value: Value) {
+  private eval(value: Value) {
     try {
       value.value = value.fn?.apply((value.scope as Scope).proxy);
     } catch (ex: any) {
