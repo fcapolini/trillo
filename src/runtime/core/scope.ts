@@ -4,7 +4,7 @@ import { ScopeProxyHandler } from "./proxy";
 import { Value, ValueProps } from "./value";
 
 export interface ScopeProps {
-  isRoot: boolean;
+  isRoot?: boolean;
 }
 
 export class Scope extends Tree<Scope> {
