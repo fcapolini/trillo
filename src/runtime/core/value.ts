@@ -23,11 +23,11 @@ export class Value extends Graph<Value> {
     this.fn = props.fn;
   }
 
-  link() {
-    let that: Value | undefined;
-    this.props.refs?.forEach(key => {
-      if ((that = this.scope.lookupValue(key)) !== undefined) {
-        this.addSrc(that);
+  link(key: string) {
+    this.props.refs?.forEach(ref => {
+      const other = this.scope.lookupValue(ref);
+      if (other) {
+        this.addSrc(other);
       } else {
         //TODO link error
       }

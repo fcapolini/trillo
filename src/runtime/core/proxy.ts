@@ -11,8 +11,8 @@ export class ScopeProxyHandler implements ProxyHandler<any> {
     return value ? this.update(value) : undefined;
   }
 
-  set(target: any, prop: string, val: any, receiver?: any): boolean {
-    const value = this.scope.lookupValue(prop);
+  set(target: any, key: string, val: any, receiver?: any): boolean {
+    const value = this.scope.lookupValue(key);
     if (value) {
       const old = value.value;
       value.value = val;

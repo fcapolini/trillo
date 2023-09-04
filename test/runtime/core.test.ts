@@ -279,4 +279,32 @@ describe('runtime: core', () => {
     assert.equal(scope1.get('z'), 22);
   });
 
+  it.skip('composed reference (1)', () => {
+    let cbCalls = 0;
+    let cbValue = undefined;
+    let scope!: core.Scope;
+
+    const app = new core.Context({}, global => {
+      global.addValue('y', { fn: function() {
+        return this.scope1.x * 2;
+      }, refs: ['scope1.x'] }, (v) => {
+        cbCalls++;
+        cbValue = v.value;
+      });
+
+      scope = new core.Scope(global.context, global, { name: 'scope1' });
+      scope.addValue('x', { fn: function() {
+        return 10;
+      } });
+    });
+    assert.equal(cbCalls, 1);
+    assert.equal(cbValue, 20);
+    assert.equal(app.global.get('y'), 20);
+
+    scope.set('x', 11);
+    assert.equal(cbCalls, 2);
+    assert.equal(cbValue, 22);
+    assert.equal(app.global.get('y'), 22);
+  });
+
 });

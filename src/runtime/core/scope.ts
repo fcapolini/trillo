@@ -4,6 +4,7 @@ import { ScopeProxyHandler } from "./proxy";
 import { Value, ValueProps } from "./value";
 
 export interface ScopeProps {
+  name?: string;
   isRoot?: boolean;
 }
 
@@ -48,8 +49,8 @@ export class Scope extends Tree<Scope> {
   }
 
   linkValues() {
-    this.values.forEach((v: Value) => {
-      v.link();
+    this.values.forEach((v: Value, k: string) => {
+      v.link(k);
     });
     this.children.forEach(child => {
       child.linkValues();
@@ -65,13 +66,15 @@ export class Scope extends Tree<Scope> {
     });
   }
 
-  lookupValue(key: string): Value | undefined {
+  lookupValue(key: string, canAscend = true): Value | undefined {
     let ret = this.values.get(key);
-    if (!ret && this.parent && !this.props.isRoot) {
-      ret = this.parent.lookupValue(key);
-    }
-    if (!ret) {
-      ret = this.context.global.values.get(key);
+    if (canAscend) {
+      if (!ret && this.parent && !this.props.isRoot) {
+        ret = this.parent.lookupValue(key);
+      }
+      if (!ret) {
+        ret = this.context.global.values.get(key);
+      }
     }
     return ret;
   }
