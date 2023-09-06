@@ -11,6 +11,9 @@ export class Context {
   props: ContextProps;
   global: Scope;
   lastId: number;
+  cycle: number;
+  refreshLevel: number;
+  pushLevel: number;
 
   constructor(props: ContextProps, cb: (ctx: Context) => void) {
     this.props = props;
@@ -18,12 +21,28 @@ export class Context {
       key: props.globalKey
     });
     this.lastId = 0;
+    this.cycle = 0;
+    this.refreshLevel = 0;
+    this.pushLevel = 0;
     cb(this);
     this.global.linkValues();
+    this.refresh();
   }
 
   nextId() {
     return ++this.lastId;
+  }
+
+  refresh(scope?: Scope, noincrement?: boolean, noupdate?: boolean) {
+    this.refreshLevel++;
+    try {
+      scope || (scope = this.global);
+      noincrement || (this.cycle++);
+      scope.unlinkValues();
+      scope.linkValues();
+      noupdate || (scope.updateValues());
+    } catch (ignored: any) {}
+    this.refreshLevel--;
   }
 }
 
@@ -94,6 +113,15 @@ export class Scope {
     });
   }
 
+  updateValues() {
+    this.object.__values__.forEach((v: Value, k: string) => {
+      this.proxy[k];
+    });
+    this.object.__children__.forEach((proxy: any) => {
+      proxy.__scope__.updateValues();
+    });
+  }
+
   lookup(key: string, canAscend = true): any {
     let ret: any;
     let scope = this;
@@ -125,8 +153,8 @@ export class Scope {
 export interface ValueProps {
   key?: string;
   fun: () => any;
-  cb?: (v: any) => void;
   refs?: string[];
+  cb?: (v: any) => void;
 }
 
 export class Value {
@@ -134,6 +162,7 @@ export class Value {
   props: ValueProps;
   value: any;
   cycle: number;
+  fun?: () => any;
   src: Set<Value>;
   dst: Set<Value>;
 
@@ -142,6 +171,7 @@ export class Value {
     this.props = props;
     this.value = value;
     this.cycle = 0;
+    this.fun = props.fun;
     this.src = new Set();
     this.dst = new Set();
     const key = props.key ?? `__v_${scope.context.nextId()}__`;
@@ -169,16 +199,38 @@ export class Value {
   }
 
   get() {
-    try {
-      const v = this.props.fun.call(this.scope.proxy);
-      if (v == null ? this.value != null : v !== this.value) {
-        this.value = v;
-        this.props.cb && this.props.cb(v);
+    const ctx = this.scope.context;
+    if (this.fun && this.cycle < ctx.cycle) {
+      this.cycle < ctx.cycle;
+      const old = this.value;
+      this.eval();
+      if (old == null ? this.value != null : old !== this.value) {
+        this.props.cb && this.props.cb(this.value);
+        if (this.dst.size && ctx.refreshLevel < 1) {
+          this.propagate();
+        }
       }
-    } catch (err: any) {
-      //TODO
-      console.log(err);
     }
     return this.value;
+  }
+
+  eval() {
+    try {
+      this.value = this.props.fun.call(this.scope.proxy);
+    } catch (err: any) {
+      //TODO
+    }
+  }
+
+  propagate() {
+    const ctx = this.scope.context;
+    if (ctx.pushLevel < 1) {
+      ctx.cycle++;
+    }
+    ctx.pushLevel++;
+    try {
+      this.dst.forEach(dst => dst.get());
+    } catch (ignored: any) {}
+    ctx.pushLevel--;
   }
 }
