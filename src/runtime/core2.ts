@@ -4,7 +4,7 @@
 // =============================================================================
 
 export interface ContextProps {
-  globalKey?: string;
+  global: ScopeProps;
 }
 
 export class Context {
@@ -17,9 +17,7 @@ export class Context {
 
   constructor(props: ContextProps, cb: (ctx: Context) => void) {
     this.props = props;
-    this.global = new Scope(this, null, {
-      key: props.globalKey
-    });
+    this.global = new Scope(this, null, props.global);
     this.lastId = 0;
     this.cycle = 0;
     this.refreshLevel = 0;
@@ -88,10 +86,20 @@ export class Scope {
   static handler = {
     get(target: any, prop: string, receiver: any) {
       let ret = Reflect.get(target, prop, receiver);
-      if (ret instanceof Value) {
+      if (ret && ret instanceof Value) {
         ret = ret.get();
       }
       return ret;
+    },
+
+    set(target: any, prop: string, val: any, receiver?: any): boolean {
+      let v = Reflect.get(target, prop, receiver);
+      if (v && v instanceof Value) {
+        v = v.set(val);
+        return true;
+      }
+      target[prop] = val;
+      return true;
     }
   }
 
@@ -212,6 +220,19 @@ export class Value {
       }
     }
     return this.value;
+  }
+
+  set(v: any) {
+    const ctx = this.scope.context;
+    const old = this.value;
+    this.value = v;
+    delete this.fun;
+    if (old == null ? this.value != null : old !== this.value) {
+      this.props.cb && this.props.cb(this.value);
+      if (this.dst.size && ctx.refreshLevel < 1) {
+        this.propagate();
+      }
+    }
   }
 
   eval() {

@@ -1,12 +1,12 @@
 import { assert } from "chai";
 import { Context, Scope, Value } from "../../src/runtime/core2";
 
-describe.only('runtime: core2', () => {
+describe('runtime: core2', () => {
 
   it('prototype chain (1)', () => {
     let scope!: Scope;
 
-    const ctx = new Context({}, ctx => {
+    const ctx = new Context({ global: {} }, ctx => {
       new Value(ctx.global, {
         key: 'x',
         fun: function() { return 10; }
@@ -27,7 +27,7 @@ describe.only('runtime: core2', () => {
     let cbCount = 0;
     let cbValue = undefined;
 
-    const ctx = new Context({}, ctx => {
+    const ctx = new Context({ global: {} }, ctx => {
       new Value(ctx.global, {
         key: 'x',
         fun: function() { return 10; }
@@ -46,12 +46,12 @@ describe.only('runtime: core2', () => {
     assert.equal(cbValue, 20);
   });
 
-  it.skip('dependency (1)', () => {
+  it('dependency (1)', () => {
     let scope!: Scope;
     let cbCount = 0;
     let cbValue = undefined;
 
-    const ctx = new Context({}, ctx => {
+    const ctx = new Context({ global: {} }, ctx => {
       new Value(ctx.global, {
         key: 'x',
         fun: function() { return 10; }
