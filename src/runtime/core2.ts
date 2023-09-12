@@ -98,7 +98,7 @@ export class Scope {
         v = v.set(val);
         return true;
       }
-      target[prop] = val;
+      receiver ? receiver[prop] = val : target[prop] = val;
       return true;
     }
   }
@@ -152,6 +152,25 @@ export class Scope {
   //   //TODO path
   //   return ret;
   // }
+  lookupRef(ref: string): Value | undefined {
+    const path = ref.split('.');
+    let ret = this.lookup(path[0]);
+    if (!ret) {
+      return undefined;
+    }
+    for (let i = 1; ret && i < path.length; i++) {
+      if (ret.hasOwnProperty(path[i])) {
+        if (ret.hasOwnProperty('__scope__')) {
+          ret = ret.__scope__.object[path[i]];
+        } else {
+          ret = ret[path[i]];
+        }
+      } else {
+        ret = undefined;
+      }
+    }
+    return ret && ret instanceof Value ? ret : undefined;
+  }
 }
 
 // =============================================================================
@@ -189,7 +208,7 @@ export class Value {
 
   link() {
     this.props.refs?.forEach(ref => {
-      const other = this.scope.lookup(ref);
+      const other = this.scope.lookupRef(ref);
       if (other && other instanceof Value) {
         this.src.add(other);
         other.dst.add(this);
